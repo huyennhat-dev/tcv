@@ -1,0 +1,298 @@
+*:hover,
+:not(:hover) {
+    transition: 0.3s;
+}
+
+#imagePreview {
+    background-size: contain !important;
+    width: 100%;
+    height: 300px;
+}
+
+#toast-container .toast-success,
+#toast-container .toast-error,
+#toast-container .toast-warning {
+    opacity: 1;
+}
+
+.alert-form {
+    position: relative;
+    z-index: 9999;
+}
+
+#toast-container>div {
+    width: 400px;
+}
+
+#toast-container ul {
+    margin: 0;
+}
+
+.cursor-auto {
+    cursor: auto !important;
+}
+
+[class*=sidebar-white-] {
+    background-color: #fff;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+a:hover {
+    color: #f5f5f5;
+}
+
+.info a {
+    color: #000;
+}
+
+.user-panel:hover {
+    background: rgba(0, 0, 0, .07);
+}
+
+.os-content {
+    padding: 0 !important;
+}
+
+.nav-item.x:hover {
+    background: rgba(0, 0, 0, .07);
+}
+
+.sidebar-collapse.sidebar-mini .main-sidebar .nav-sidebar .nav-link {
+    margin-left: 8px !important;
+}
+
+.user-panel .image {
+    padding-left: 20px !important;
+}
+
+.breadcrumb-item a {
+    color: #007bff;
+}
+
+.text-black {
+    color: #000;
+}
+
+.active.text-black {
+    color: #007bff !important;
+}
+
+.direct-chat-messages {
+    height: auto !important;
+}
+
+.direct-chat-messages:last-child {}
+
+.direct-chat .card-body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #eee;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    margin-bottom: 0;
+    border-bottom: 2px solid transparent;
+}
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+    border-color: #007bff;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.428571429;
+}
+
+.fw-500 {
+    font-weight: 500 !important;
+}
+
+.fz-20 {
+    font-size: 20px !important;
+}
+
+.fz-18 {
+    font-size: 18px !important;
+}
+
+.w-80 {
+    width: 80px !important;
+}
+
+.lh-15 {
+    line-height: 15px !important;
+}
+
+.webkit-line-clamp-1 {
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.webkit-line-clamp-2 {
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.custom-switch .custom-control-input:checked~.custom-control-label::after,
+.custom-control-input:checked~.custom-control-label::before {
+    cursor: pointer;
+}
+
+.s-100 {
+    width: 100px !important;
+    height: 100px !important;
+}
+
+.w-200 {
+    width: 200px !important;
+}
+
+.white-box {
+    background: #fff !important;
+}
+
+li.devider {
+    margin: 7px 0;
+    border-top: 1px solid #eee;
+}
+
+.book_nav ul li {
+    list-style: none;
+}
+
+.book_nav ul li.active {
+    background: #fb9678 !important;
+}
+
+.book_nav ul li.active a,
+.book_nav ul li.active:hover a {
+    color: #fff !important;
+}
+
+.book_nav ul li:hover a {
+    color: #ff7676 !important;
+}
+
+.w-20 {
+    width: 20% !important;
+}
+
+.border-right-3 {
+    border-right: 3px solid;
+}
+
+.cur-poi {
+    cursor: pointer !important;
+}
+
+.pt-2px {
+    padding-top: 2px !important;
+}
+
+#cke_1_top {
+    display: none !important;
+}
+
+.library .tab-content .tab-pane {
+    overflow-y: scroll;
+    max-height: 420px;
+    min-height: 420px;
+}
+
+.direct-chat-messages::-webkit-scrollbar,
+.library .tab-content .tab-pane::-webkit-scrollbar {
+    width: 4px;
+}
+
+
+/* Handle */
+
+.direct-chat-messages::-webkit-scrollbar-thumb,
+.library .tab-content .tab-pane::-webkit-scrollbar-thumb {
+    background: #007bff;
+}
+
+.read_mail a {
+    color: #007bff;
+}
+
+.account_notify_icon {
+    position: absolute;
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: red;
+    top: 15px;
+    left: 12px;
+    border-radius: 50%;
+}
+
+.w-30 {
+    width: 30px !important;
+}
+
+.w-150 {
+    width: 150px !important;
+}
+
+.w-200 {
+    width: 200px !important;
+}
+
+.w-250 {
+    width: 250px !important;
+}
+
+.w-350 {
+    width: 350px !important;
+}
+
+.w-450 {
+    width: 450px !important;
+}
+
+.w-500 {
+    width: 500px !important;
+}
+
+.w-700 {
+    width: 700px !important;
+}
+
+.w-100px {
+    width: 100px !important;
+}
+
+@media (max-width: 851.5px) {
+    .book_nav .active_none {
+        display: none;
+    }
+}
+
+input,
+select {
+    outline: none;
+}

@@ -1,0 +1,142 @@
+*:hover,
+:not(:hover) {
+    transition: 0.3s;
+}
+
+#imagePreview {
+    background-size: contain !important;
+    width: 100%;
+    height: 300px;
+}
+
+#toast-container .toast-success,
+#toast-container .toast-error,
+#toast-container .toast-warning {
+    opacity: 1;
+}
+
+.alert-form {
+    position: relative;
+    z-index: 9999;
+}
+
+#toast-container>div {
+    width: 400px;
+}
+
+#toast-container ul {
+    margin: 0;
+}
+
+.cursor-auto {
+    cursor: auto !important;
+}
+
+.background_db {
+    height: 75vh;
+    background-size: cover !important;
+    background-position-x: center !important;
+}
+
+.admin_notify_icon {
+    position: absolute;
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: red;
+    top: 10px;
+    right: 11px;
+    border-radius: 50%;
+}
+
+.webkit-line-clamp-2 {
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.lh-15 {
+    line-height: 15px !important;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.428571429;
+}
+
+.w-30 {
+    width: 30px !important;
+}
+
+.w-150 {
+    width: 150px !important;
+}
+
+.w-200 {
+    width: 200px !important;
+}
+
+.w-250 {
+    width: 250px !important;
+}
+
+.w-350 {
+    width: 350px !important;
+}
+
+.w-450 {
+    width: 450px !important;
+}
+
+.w-500 {
+    width: 500px !important;
+}
+
+.w-700 {
+    width: 700px !important;
+}
+
+.w-100px {
+    width: 100px !important;
+}
+
+.bg-min.active {
+    display: none;
+    text-align: center;
+    width: 100%;
+    z-index: 9999999;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.bg-min.active img {
+    width: 80%;
+}
+
+.wrapper {
+    display: block;
+}
+
+@media (max-width: 769.5px) {
+    .bg-min.active {
+        display: block;
+    }
+    .wrapper {
+        display: none;
+    }
+}
+
+input,
+select {
+    outline: none;
+}
