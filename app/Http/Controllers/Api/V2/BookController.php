@@ -30,16 +30,34 @@ class BookController extends Controller
         $world = World::find($book['thegioi_id']);
         $personality = Personality::find($book['tinhcach_id']);
 
-        $chapters = Chapter::where('trangthai', 1)->where('truyen_id', $id)->orderBy('slug', 'ASC')->get();
-        $listChapterName = [];
-        foreach ($chapters as $val) {
+        $loadchapter = Chapter::where('trangthai', 1)->where('truyen_id', $id)->orderBy('slug', 'ASC')->get();
+        $chapters = [];
+        foreach ($loadchapter as $val) {
 
             $chapter = [
                 'chuongid' => $val['id'],
                 'tenchuong' => $val['tenchuong'],
                 'slug'=>$val['slug']
             ];
-            array_push($listChapterName, $chapter);
+            array_push($chapters, $chapter);
+        }
+
+        $loadrate = Rating::where('truyen_id', $book['id'])->orderBy('id', 'DESC')->limit(3)->get();
+
+        $rates = [];
+        
+        foreach ($loadrate as $val) {
+            $rate = [
+                'rateid' => $val['id'],
+                'truyen_id' => $val['truyen_id'],
+                'username' => $val['ten'],
+                'sosao' => $val['sosao'],
+                'uid' => $val['u_id'],
+                'content' => $val['noidung'],
+                'photo' => $val['avt'],
+                'ngaydang'=>$val['ngaydang']
+            ]; 
+            array_push($rates, $rate);
         }
 
         $data = [
@@ -61,7 +79,8 @@ class BookController extends Controller
             'tinhcach' => $personality['tentinhcach'],
             'thegioi' => $world['tenthegioi'],
             'luuphai' => $sect['tenluuphai'],
-            'danhsachchuong' => $listChapterName
+            'danhsachchuong' => $chapters,
+            'topdecu' => $rates
         ];
         return response()->json(
             $data
