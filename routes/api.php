@@ -75,7 +75,15 @@ Route::prefix('v1')->group(function () {
 
 Route::prefix('v2')->group(function () {
 
+    Route::get('/home-data', [App\Http\Controllers\Api\V2\HomeController::class, 'getHomePage']);
+
     Route::get('/banner', [App\Http\Controllers\Api\V2\HomeController::class, 'banner']);
+
+    Route::get('/book_new_update', [App\Http\Controllers\Api\V2\HomeController::class, 'bookNewUpdate']);
+    Route::get('/topvote', [App\Http\Controllers\Api\V2\HomeController::class, 'topVote']);
+    Route::get('/recent_review', [App\Http\Controllers\Api\V2\HomeController::class, 'recentReview']);
+
+
     Route::get('/books/{id}', [App\Http\Controllers\Api\V2\BookController::class, 'showBookDetail']);
     Route::get('/list_chapter/{truyen_id}', [App\Http\Controllers\Api\V2\BookController::class, 'listChapter']);
     Route::get('/load_chapter/{id}', [App\Http\Controllers\Api\V2\BookController::class, 'loadChapter']);

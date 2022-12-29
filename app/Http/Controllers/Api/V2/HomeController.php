@@ -8,18 +8,27 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\Chapter;
 use App\Models\Faq;
+use App\Models\Rating;
 use App\Models\SlideModel;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function banner()
+    public function getHomePage()
     {
-        $book = Book::where('trangthai', 1)->inRandomOrder()->limit(9)->get();
-        $data = [];
+        $banners = [];
+        $newbookupdates = [];
+        $selectbooks = [];
+        $recentreviews = [];
+        $newbooks = [];
 
-        foreach ($book as $val) {
-            $chuongmoinhat = Chapter::where('trangthai', 1)->where('truyen_id', $val['id'])->get();
+        $bookrand = Book::where('trangthai', 1)
+            ->inRandomOrder()->limit(9)->get();
+
+        foreach ($bookrand as $val) {
+            $chuongmoinhat = Chapter::where('trangthai', 1)
+                ->where('truyen_id', $val['id'])
+                ->orderBy("slug", "desc")->first();
             $banner = [
                 'id' => $val['id'],
                 'tentruyen' => $val['tentruyen'],
@@ -28,90 +37,147 @@ class HomeController extends Controller
                 'mota' => $val['mota'],
                 'tacgia' => $val['tacgia'],
                 'hinhanh' => $val['hinhanh'],
-                'chuongmoinhat'=>count($chuongmoinhat)
-
+                'chuongmoinhat' => (int)$chuongmoinhat['slug']
             ];
+            array_push($banners, $banner);
+        }
 
+        $chapmoi = Chapter::with('truyen')
+            ->select('*')
+            ->where('trangthai', 1)
+            ->orderBy('ngaydang', 'DESC')
+            ->get()->unique('truyen_id')->take(15);
+
+        foreach ($chapmoi as $val) {
+            $newbookupdate = [
+                "id" => $val['truyen_id'],
+                "tentruyen" => $val['truyen']['tentruyen'],
+                "hinhanh" => $val['truyen']['hinhanh'],
+                "chuongmoinhat" => (int) $val['slug']
+            ];
+            array_push($newbookupdates, $newbookupdate);
+        }
+
+        $bookselects = Book::where('trangthai', 1)
+            ->orderBy('luotdecu', 'DESC')->get()->take(15);
+        foreach ($bookselects as $val) {
+            $selectbook = [
+                "id" => $val['id'],
+                "tentruyen" => $val['tentruyen'],
+                "hinhanh" => $val['hinhanh']
+            ];
+            array_push($selectbooks, $selectbook);
+        }
+
+        $recentreview = Rating::select('*')->where('trangthai', 1)
+            ->orderBy('id', 'DESC')->get()
+            ->unique('truyen_id')->take(10);
+
+        foreach ($recentreview as $val) {
+            $author = Account::find($val['u_id']);
+            $book = Book::find($val['truyen_id']);
+
+            $recentreview = [
+                "id" => $val['id'],
+                "uphoto" => $author['avatar'],
+                "username" => $author['username'],
+                "truyenid" => $book['id'],
+                "tentruyen" => $book['tentruyen'],
+                "hinhanh" => $book['hinhanh'],
+                "tacgia" => $book['tacgia'],
+                "sosao" => $val['sosao'],
+                "noidung" => $val['noidung'],
+                "ngaydang" => $val['ngaydang']
+            ];
+            array_push($recentreviews, $recentreview);
+        }
+
+        $booknew = Book::where('trangthai', 1)->orderBy('ngaydang', 'DESC')->paginate(10);
+        foreach ($booknew as $val) {
+            $chuongmoinhat = Chapter::where('trangthai', 1)
+            ->where('truyen_id', $val['id'])
+            ->orderBy("slug", "desc")->first();
+            $newbook = [
+                "id" => $val['id'],
+                "tentruyen" => $val['tentruyen'],
+                "hinhanh" => $val['hinhanh'],
+                "chuongmoinhat"=>(int) $chuongmoinhat['slug']
+            ];
+            array_push($newbooks, $newbook);
+
+        }
+
+        $data = [
+            "banner" => $banners,
+            "newbookupdate" => $newbookupdates,
+            "selectbook" => $selectbooks,
+            "recentreview" => $recentreviews,
+            "newbook" => $newbooks
+        ];
+        return response()->json($data);
+    }
+    public function banner()
+    {
+        $book = Book::where('trangthai', 1)->inRandomOrder()->limit(9)->get();
+        $data = [];
+
+        foreach ($book as $val) {
+            $chuongmoinhat = Chapter::where('trangthai', 1)->where('truyen_id', $val['id'])->orderBy("slug", "desc")->first();
+            $banner = [
+                'id' => $val['id'],
+                'tentruyen' => $val['tentruyen'],
+                'hinhanh' => $val['hinhanh'],
+                'slug' => $val['slug'],
+                'mota' => $val['mota'],
+                'tacgia' => $val['tacgia'],
+                'hinhanh' => $val['hinhanh'],
+                'chuongmoinhat' => (int)$chuongmoinhat['slug']
+            ];
             array_push($data, $banner);
         }
-        return response()->json(
-            $data
-        );
+        return response()->json($data);
     }
 
-    public function latestNovel()
+    public function bookNewUpdate()
     {
-        $latestNovel = Book::where('trangthai', 1)->orderBy('thoigiancapnhat', 'DESC')->paginate(10);
-        return $latestNovel;
-    }
-    public function nominations()
-    {
-        $nominations = Book::where('trangthai', 1)->inRandomOrder()->limit(6)->get();
-        return $nominations;
-    }
-
-    public function popular()
-    {
-        $popular = Book::where('trangthai', 1)->orderBy('luotxem', 'DESC')->paginate(9);
-        return $popular;
-    }
-    public function justPosted()
-    {
-        $justPosted = Book::where('trangthai', 1)->orderBy('ngaydang', 'DESC')->paginate(10);
-        return $justPosted;
-    }
-    public function justFinished()
-    {
-        $justFinished = Book::where('tinhtrang', 1)->orderBy('luotxem', 'DESC')->paginate(9);
-        return $justFinished;
-    }
-
-    public function search_book()
-    {
-        $tukhoa = trim($_GET['tukhoa']);
-        if ($tukhoa != null) {
-            $truyen = Book::where('trangthai', '1')
-                ->where(function ($query) {
-                    $tukhoa = trim($_GET['tukhoa']);
-                    $query->where('tentruyen', 'LIKE', '%' . $tukhoa . '%')
-                        ->orWhere('tacgia', 'LIKE', '%' . $tukhoa . '%');
-                })
-                ->get();
-
-            return $truyen;
-        } else {
-            $truyen = [];
-            return $truyen;
+        $chap_moi = Chapter::with('truyen')
+            ->select('*')
+            ->where('trangthai', 1)
+            ->orderBy('ngaydang', 'DESC')
+            ->get()->unique('truyen_id')->take(15);
+        $data = [];
+        foreach ($chap_moi as $val) {
+            $book = [
+                "id" => $val['truyen_id'],
+                "tentruyen" => $val['truyen']['tentruyen'],
+                "hinhanh" => $val['truyen']['hinhanh'],
+                "chuongmoinhat" => (int) $val['slug']
+            ];
+            array_push($data, $book);
         }
+        return response()->json($data);
     }
 
-    public function fetchBook($slug)
+
+    public function topVote()
     {
-        if ($slug == 'fetch_all_book') {
-            $book = Book::where('trangthai', 1)->paginate(10);
-        } else if ($slug == 'new_book') {
-            $book = Book::where('trangthai', 1)->orderBy('thoigiancapnhat', 'DESC')->paginate(10);
-        } else if ($slug == 'nomination') {
-            $book = Book::where('trangthai', 1)->orderBy('luotdecu', 'DESC')->paginate(10);
-        } else if ($slug == 'popular') {
-            $book = Book::where('trangthai', 1)->orderBy('luotxem', 'DESC')->paginate(10);
-        } else if ($slug == 'just_posted') {
-            $book = Book::where('trangthai', 1)->orderBy('ngaydang', 'DESC')->paginate(10);
-        } else if ($slug == 'just_finished') {
-            $book = Book::where('trangthai', 1)->where('tinhtrang', 1)->orderBy('luotxem', 'DESC')->paginate(9);
+        $truyen = Book::where('trangthai', 1)->orderBy('luotdecu', 'DESC')->get()->take(15);
+
+        $data = [];
+        foreach ($truyen as $val) {
+            $book = [
+                "id" => $val['id'],
+                "tentruyen" => $val['tentruyen'],
+                "hinhanh" => $val['hinhanh']
+            ];
+            array_push($data, $book);
         }
-        return $book;
+        return response()->json($data);
     }
 
-    public function loadQues()
+    public function recentReview()
     {
-        $ques = Faq::all();
-        return $ques;
-    }
-
-    public function fetchCategory($id)
-    {
-        $category = Category::find($id);
-        return $category;
+        $vote = Rating::select('*')->where('trangthai', 1)->orderBy('id', 'DESC')->get()->unique('truyen_id')->take(10);
+        return $vote;
     }
 }
