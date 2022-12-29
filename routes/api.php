@@ -77,6 +77,8 @@ Route::prefix('v2')->group(function () {
 
     Route::get('/banner', [App\Http\Controllers\Api\V2\HomeController::class, 'banner']);
     Route::get('/books/{id}', [App\Http\Controllers\Api\V2\BookController::class, 'showBookDetail']);
+    Route::get('/list_chapter/{truyen_id}', [App\Http\Controllers\Api\V2\BookController::class, 'listChapter']);
+    Route::get('/load_chapter/{id}', [App\Http\Controllers\Api\V2\BookController::class, 'loadChapter']);
 
 
 });

@@ -148,7 +148,7 @@ class UserController extends Controller
             $result =  Account::where('email', $input['email'])->first();
             if ($result != null) {
                 return response()->json([
-                    'success' => false,
+                    'success' => true,
                     'user' => $result
                 ]);
             }

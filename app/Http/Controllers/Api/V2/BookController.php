@@ -37,7 +37,7 @@ class BookController extends Controller
             $chapter = [
                 'chuongid' => $val['id'],
                 'tenchuong' => $val['tenchuong'],
-                'slug'=>$val['slug']
+                'slug' => $val['slug']
             ];
             array_push($chapters, $chapter);
         }
@@ -45,7 +45,7 @@ class BookController extends Controller
         $loadrate = Rating::where('truyen_id', $book['id'])->orderBy('id', 'DESC')->limit(3)->get();
 
         $rates = [];
-        
+
         foreach ($loadrate as $val) {
             $rate = [
                 'rateid' => $val['id'],
@@ -55,8 +55,8 @@ class BookController extends Controller
                 'uid' => $val['u_id'],
                 'content' => $val['noidung'],
                 'photo' => $val['avt'],
-                'ngaydang'=>$val['ngaydang']
-            ]; 
+                'ngaydang' => $val['ngaydang']
+            ];
             array_push($rates, $rate);
         }
 
@@ -160,5 +160,27 @@ class BookController extends Controller
     {
         $comment = BookComment::where('truyen_id', $truyen_id)->orderBy('id', 'DESC')->paginate(10);
         return $comment;
+    }
+
+    public function listChapter($truyen_id,)
+    {
+        $listChapter = Chapter::where('trangthai', 1)->where('truyen_id', $truyen_id)->orderBy('slug', "ASC")->get();
+        $datas = [];
+        foreach ($listChapter as $val) {
+            $data = [
+                'chuongid' => $val['id'],
+                'tenchuong' => $val['tenchuong'],
+                'slug' => $val['slug']
+            ];
+            array_push($datas, $data);
+        }
+
+        return response()->json($datas);
+    }
+
+    public function loadChapter($id,)
+    {
+        $chapter = Chapter::find($id);
+        return response()->json($chapter);
     }
 }

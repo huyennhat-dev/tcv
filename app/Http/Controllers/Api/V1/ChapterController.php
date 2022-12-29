@@ -38,6 +38,7 @@ class ChapterController extends Controller
                         'success' => false
                     ]);
                 }
+                
             } else {
                 $readingbook = new ReadingBooks();
                 $readingbook->truyen_id = $truyen->id;
