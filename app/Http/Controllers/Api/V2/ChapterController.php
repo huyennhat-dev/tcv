@@ -1,16 +1,46 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V2;
 
 use App\Http\Controllers\Controller;
 use App\Models\Book;
+use App\Models\BookComment;
+use App\Models\Category;
 use App\Models\Chapter;
+use App\Models\Personality;
+use App\Models\Rating;
+use App\Models\Readbook;
 use App\Models\ReadingBooks;
+use App\Models\Sect;
+use App\Models\World;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use LengthException;
 
 class ChapterController extends Controller
 {
+
+    public function listChapter($truyen_id,)
+    {
+        $listChapter = Chapter::where('trangthai', 1)->where('truyen_id', $truyen_id)->orderBy('slug', "ASC")->get();
+        $datas = [];
+        foreach ($listChapter as $val) {
+            $data = [
+                'chuongid' => $val['id'],
+                'tenchuong' => $val['tenchuong'],
+                'slug' => $val['slug']
+            ];
+            array_push($datas, $data);
+        }
+
+        return response()->json($datas);
+    }
+
+    public function loadChapter($id,)
+    {
+        $chapter = Chapter::find($id);
+        return response()->json($chapter);
+    }
+
     public function readChapter($cus_id, $truyen_id, $chapter_slug)
     {
 
@@ -24,7 +54,15 @@ class ChapterController extends Controller
         $luotxem_chuong = Chapter::findOrFail($chuong->id);
         $luotxem_chuong->increment('luotdoc');
 
-        if ((int)$cus_id > 0) {
+        if ($cus_id > 0) {
+            $newReadBook = new Readbook();
+            $newReadBook->truyen_id = $truyen_id;
+            $newReadBook->u_id = $cus_id;
+            $newReadBook->chapter_id = $chuong['id'];
+            $newReadBook->theloai_id = $book['theloai_id'];
+            $newReadBook->ngaythem = date("Y-m-d");
+
+            $newReadBook->save();
 
             if ($readingbook) {
                 if ($chuong) {
@@ -38,7 +76,6 @@ class ChapterController extends Controller
                         'success' => false
                     ]);
                 }
-                
             } else {
                 $readingbook = new ReadingBooks();
                 $readingbook->truyen_id = $truyen->id;
@@ -57,9 +94,4 @@ class ChapterController extends Controller
         }
     }
 
-    public function listChapter($truyen_id, $sort)
-    {
-        $listChapter = Chapter::where('trangthai', 1)->where('truyen_id', $truyen_id)->orderBy('slug', $sort)->get();
-        return $listChapter;
-    }
 }

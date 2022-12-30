@@ -629,7 +629,7 @@ $cus_id = Session::get('cus_id');
                                             <li class="mr-1" style="color:#ffc1052e ; font-size: 15px;">★</li>
                                             <li class="mr-1" style="color:#ffc1052e ; font-size: 15px;">★</li>
                                             <li class="mr-1" style="color:#ffc1052e ; font-size: 15px;">★</li>
-                                            <ul class="d-flex active" style="width: {{$val->sosao*100/5}}%">
+                                            <ul class="d-flex active" style="width: <?php $val->sosao*100/5?>%">
                                                 <li class="mr-1" style="color:#ffc000 ; font-size: 15px;">★</li>
                                                 <li class="mr-1" style="color:#ffc000 ; font-size: 15px;">★</li>
                                                 <li class="mr-1" style="color:#ffc000 ; font-size: 15px;">★</li>
@@ -674,7 +674,7 @@ $cus_id = Session::get('cus_id');
                                                 <li class="mr-1" style="color:#ffc1052e ; font-size: 15px;">★</li>
                                                 <li class="mr-1" style="color:#ffc1052e ; font-size: 15px;">★</li>
                                                 <li class="mr-1" style="color:#ffc1052e ; font-size: 15px;">★</li>
-                                                <ul class="d-flex active" style="width: {{$val->sosao*100/5}}%">
+                                                <ul class="d-flex active" style="width:<?php $val->sosao*100/5?> %">
                                                     <li class="mr-1" style="color:#ffc000 ; font-size: 15px;">★</li>
                                                     <li class="mr-1" style="color:#ffc000 ; font-size: 15px;">★</li>
                                                     <li class="mr-1" style="color:#ffc000 ; font-size: 15px;">★</li>

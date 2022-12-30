@@ -76,10 +76,12 @@ Route::prefix('v1')->group(function () {
 Route::prefix('v2')->group(function () {
 
     Route::get('/home-data', [App\Http\Controllers\Api\V2\HomeController::class, 'getHomePage']);
+    Route::get('/book_recommendation/{uid}', [App\Http\Controllers\Api\V2\HomeController::class, 'bookRecommendation']);
 
     Route::get('/books/{id}', [App\Http\Controllers\Api\V2\BookController::class, 'showBookDetail']);
-    Route::get('/list_chapter/{truyen_id}', [App\Http\Controllers\Api\V2\BookController::class, 'listChapter']);
-    Route::get('/load_chapter/{id}', [App\Http\Controllers\Api\V2\BookController::class, 'loadChapter']);
+    Route::get('/list_chapter/{truyen_id}', [App\Http\Controllers\Api\V2\ChapterController::class, 'listChapter']);
+    Route::get('/load_chapter/{id}', [App\Http\Controllers\Api\V2\ChapterController::class, 'loadChapter']);
+    Route::get('/books/{cus_id}/{truyen_id}/{chapter_slug}', [App\Http\Controllers\Api\V2\ChapterController::class, 'readChapter']);
 
 
 });

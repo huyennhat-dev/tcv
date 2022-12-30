@@ -9,8 +9,12 @@ use App\Models\Category;
 use App\Models\Chapter;
 use App\Models\Faq;
 use App\Models\Rating;
+use App\Models\Readbook;
 use App\Models\SlideModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\isEmpty;
 
 class HomeController extends Controller
 {
@@ -95,16 +99,15 @@ class HomeController extends Controller
         $booknew = Book::where('trangthai', 1)->orderBy('ngaydang', 'DESC')->paginate(10);
         foreach ($booknew as $val) {
             $chuongmoinhat = Chapter::where('trangthai', 1)
-            ->where('truyen_id', $val['id'])
-            ->orderBy("slug", "desc")->first();
+                ->where('truyen_id', $val['id'])
+                ->orderBy("slug", "desc")->first();
             $newbook = [
                 "id" => $val['id'],
                 "tentruyen" => $val['tentruyen'],
                 "hinhanh" => $val['hinhanh'],
-                "chuongmoinhat"=>(int) $chuongmoinhat['slug']
+                "chuongmoinhat" => (int) $chuongmoinhat['slug']
             ];
             array_push($newbooks, $newbook);
-
         }
 
         $data = [
@@ -115,5 +118,55 @@ class HomeController extends Controller
             "newbook" => $newbooks
         ];
         return response()->json($data);
+    }
+
+    public function bookRecommendation($uId)
+    {
+        $data = [];
+        $theloai_id = 0;
+        $current_day = date("Y-m-d");
+
+        function getCateId($arr, $max)
+        {
+            foreach ($arr as $key => $val) {
+                if ($val == $max) return $key;
+            }
+        }
+
+        $checkUser = Readbook::where("u_id", $uId)->count();
+
+        if ($checkUser > 0) {
+            $bookforday = Readbook::all()->where("u_id", $uId)
+                ->where("ngaythem", $current_day)
+                ->countBy("theloai_id");
+
+            if (count($bookforday) > 0) {
+                $theloai_id = getCateId($bookforday, $bookforday->max());
+            } else {
+                $booknotforday = Readbook::all()->where("u_id", $uId)
+                    ->where("ngaythem", '<', $current_day)
+                    ->countBy("theloai_id");
+                $theloai_id = getCateId($booknotforday, $booknotforday->max());
+            }
+        } else {
+            $bookforday = Readbook::all()
+                ->where("ngaythem", $current_day)
+                ->countBy("theloai_id");
+
+            if (count($bookforday) > 0) {
+                $theloai_id = getCateId($bookforday, $bookforday->max());
+            } else {
+                $booknotforday = Readbook::all()
+                    ->where("ngaythem", '<', $current_day)
+                    ->countBy("theloai_id");
+                $theloai_id = getCateId($booknotforday, $booknotforday->max());
+            }
+        }
+
+        $book = Book::where('trangthai', 1)
+            ->where('theloai_id', $theloai_id)
+            ->orderBy('luotxem', 'desc')
+            ->get();
+        return response()->json($book);
     }
 }
