@@ -74,6 +74,7 @@ Route::prefix('v1')->group(function () {
 });
 
 Route::prefix('v2')->group(function () {
+    //
 
     Route::get('/home-data', [App\Http\Controllers\Api\V2\HomeController::class, 'getHomePage']);
     Route::get('/book_recommendation/{uid}', [App\Http\Controllers\Api\V2\HomeController::class, 'bookRecommendation']);
