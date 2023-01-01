@@ -8,9 +8,12 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\Chapter;
 use App\Models\Faq;
+use App\Models\Personality;
 use App\Models\Rating;
 use App\Models\Readbook;
+use App\Models\Sect;
 use App\Models\SlideModel;
+use App\Models\World;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -96,7 +99,7 @@ class HomeController extends Controller
             array_push($recentreviews, $recentreview);
         }
 
-        $booknew = Book::where('trangthai', 1)->orderBy('ngaydang', 'DESC')->paginate(10);
+        $booknew = Book::where('trangthai', 1)->orderBy('ngaydang', 'DESC')->get()->take(10);
         foreach ($booknew as $val) {
             $chuongmoinhat = Chapter::where('trangthai', 1)
                 ->where('truyen_id', $val['id'])
@@ -122,7 +125,7 @@ class HomeController extends Controller
 
     public function bookRecommendation($uId)
     {
-        $data = [];
+        $datas = [];
         $theloai_id = 0;
         $current_day = date("Y-m-d");
 
@@ -166,7 +169,62 @@ class HomeController extends Controller
         $book = Book::where('trangthai', 1)
             ->where('theloai_id', $theloai_id)
             ->orderBy('luotxem', 'desc')
-            ->get();
-        return response()->json($book);
+            ->get()->take(15);
+
+        foreach ($book as $val) {
+            $chuongmoinhat = Chapter::where('trangthai', 1)
+                ->where('truyen_id', $val['id'])
+                ->orderBy("slug", "desc")->first();
+
+            $theloai = Category::find($val['theloai_id']);
+            $tinhcach = Personality::find($val['tinhcach_id']);
+            $luuphai = Sect::find($val['luuphai_id']);
+            $thegioi = World::find($val['thegioi_id']);
+
+            $data = [
+                "id" => $val['id'],
+                "tentruyen" => $val['tentruyen'],
+                "hinhanh" => $val['hinhanh'],
+                "tacgia" => $val['tacgia'],
+                "chuongmoinhat" => (int) $chuongmoinhat['slug'],
+                "theloai" => $theloai['tentheloai'],
+                "tinhcach" => $tinhcach['tentinhcach'],
+                "luuphai" => $luuphai['tenluuphai'],
+                "thegioi" => $thegioi['tenthegioi']
+            ];
+            array_push($datas, $data);
+        }
+
+        if (count($book) < 15) {
+            $bookrand = Book::all()->where('trangthai', 1)
+                ->where('theloai_id', '!=', $theloai_id)
+                ->random(15-count($book));
+
+            foreach ($bookrand as $val) {
+                $chuongmoinhat = Chapter::where('trangthai', 1)
+                    ->where('truyen_id', $val['id'])
+                    ->orderBy("slug", "desc")->first();
+
+                $theloai = Category::find($val['theloai_id']);
+                $tinhcach = Personality::find($val['tinhcach_id']);
+                $luuphai = Sect::find($val['luuphai_id']);
+                $thegioi = World::find($val['thegioi_id']);
+
+                $datar = [
+                    "id" => $val['id'],
+                    "tentruyen" => $val['tentruyen'],
+                    "hinhanh" => $val['hinhanh'],
+                    "tacgia" => $val['tacgia'],
+                    "chuongmoinhat" => (int) $chuongmoinhat['slug'],
+                    "theloai" => $theloai['tentheloai'],
+                    "tinhcach" => $tinhcach['tentinhcach'],
+                    "luuphai" => $luuphai['tenluuphai'],
+                    "thegioi" => $thegioi['tenthegioi']
+                ];
+                array_push($datas, $datar);
+            }
+        }
+
+        return response()->json($datas);
     }
 }
