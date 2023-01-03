@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Chapter;
 use App\Models\Personality;
 use App\Models\Rating;
+use App\Models\ReadingBooks;
 use App\Models\Sect;
 use App\Models\World;
 use Illuminate\Http\Request;
@@ -21,10 +22,10 @@ class BookController extends Controller
         return Book::all();
     }
 
-    public function showBookDetail($id)
+    public function showBookDetail($uid, $id)
     {
 
-        $book = Book::find($id);
+        $book = Book::where('trangthai', 1)->where('id', $id)->first();
         $category = Category::find($book['theloai_id']);
         $sect = Sect::find($book['luuphai_id']);
         $world = World::find($book['thegioi_id']);
@@ -60,6 +61,9 @@ class BookController extends Controller
             array_push($rates, $rate);
         }
 
+        $history_book = ReadingBooks::where('truyen_id', $id)->where('u_id', $uid)->first();
+        $chuong_slug = $history_book != null ? $history_book['chuong_slug'] : 0;
+
         $data = [
             'id' => $book['id'],
             'tentruyen' => $book['tentruyen'],
@@ -70,6 +74,7 @@ class BookController extends Controller
             'hinhanh' => $book['hinhanh'],
             'luotxem' => $book['luotxem'],
             'ngaydang' => $book['ngaydang'],
+            'chuongslug' => $chuong_slug,
             'thoigiancapnhat' => $book['thoigiancapnhat'],
             'sosao' => $book['sosao'],
             'sochuong' => $book['sochuong'],
@@ -87,5 +92,34 @@ class BookController extends Controller
         );
     }
 
+    public function historyReadBook($cus_id)
+    {
+        $books =  ReadingBooks::where('u_id', $cus_id)->orderBy('id', 'DESC')->simplePaginate(20);
+        $datas = [];
+        $array = $books->toArray();
+        foreach ($array['data'] as $item) {
+            $book = Book::where('trangthai', 1)->where('id', $item['truyen_id'])->first();
+            $theloai = Category::find($book['theloai_id']);
+            $data = [
+                "id" => $item['id'],
+                "tentruyen" => $book['tentruyen'],
+                "hinhanh" => $book['hinhanh'],
+                "tacgia" => $book['tacgia'],
+                "theloai" => $theloai['tentheloai'],
+                "truyen_id" => $item['truyen_id'],
+                "chuong_slug" => $item['chuong_slug'],
+                'tongsochuong' => $book['sochuong']
+            ];
+            array_push($datas, $data);
+        }
+        return response()->json($datas);
+    }
 
+    public function deleteHistory($id)
+    {
+        ReadingBooks::where('id', $id)->delete();
+        return response()->json(
+            ["success" => true]
+        );
+    }
 }
