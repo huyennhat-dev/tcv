@@ -12,6 +12,7 @@ use App\Models\Rating;
 use App\Models\Readbook;
 use App\Models\ReadingBooks;
 use App\Models\Sect;
+use App\Models\TickBook;
 use App\Models\World;
 use Illuminate\Http\Request;
 use LengthException;
@@ -64,6 +65,16 @@ class ChapterController extends Controller
 
             $newReadBook->save();
 
+            $bookmark = TickBook::where('u_id', $cus_id)
+                ->where('truyen_id', $truyen_id)
+                ->first();
+
+            if ($bookmark) {
+                $bookmark->chuong_id = $chuong->id;
+                $bookmark->chuong_slug = $chuong->slug;
+                $bookmark->save();
+            }
+
             if ($readingbook) {
                 if ($chuong) {
                     $readingbook->chuong_id = $chuong->id;
@@ -93,5 +104,4 @@ class ChapterController extends Controller
             return $chuong;
         }
     }
-
 }

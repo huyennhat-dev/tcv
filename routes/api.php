@@ -79,15 +79,24 @@ Route::prefix('v2')->group(function () {
 
     Route::get('/home-data', [App\Http\Controllers\Api\V2\HomeController::class, 'getHomePage']);
     Route::get('/book_recommendation/{uid}', [App\Http\Controllers\Api\V2\HomeController::class, 'bookRecommendation']);
+    Route::get('/search_book', [App\Http\Controllers\Api\V2\HomeController::class, 'search_book']);
+
 
     Route::get('/books/{uid}/{id}', [App\Http\Controllers\Api\V2\BookController::class, 'showBookDetail']);
     Route::get('/library/history/{cus_id}', [App\Http\Controllers\Api\V2\BookController::class, 'historyReadBook']);
     Route::delete('/delete_history/{id}', [App\Http\Controllers\Api\V2\BookController::class, 'deleteHistory']);
+    
+    Route::get('/library/bookmark/{cus_id}', [App\Http\Controllers\Api\V2\BookController::class, 'showAllbookMark']);
+    Route::post('/library/bookmark', [App\Http\Controllers\Api\V2\BookController::class, 'bookMark']);
+    Route::delete('/delete_bookmark/{id}', [App\Http\Controllers\Api\V2\BookController::class, 'delBookMark']);
+
+    Route::get('/book_for_you/{truyen_id}', [App\Http\Controllers\Api\V2\BookController::class, 'bookForYou']);
 
 
     Route::get('/list_chapter/{truyen_id}', [App\Http\Controllers\Api\V2\ChapterController::class, 'listChapter']);
     Route::get('/load_chapter/{id}', [App\Http\Controllers\Api\V2\ChapterController::class, 'loadChapter']);
     Route::get('/books/{cus_id}/{truyen_id}/{chapter_slug}', [App\Http\Controllers\Api\V2\ChapterController::class, 'readChapter']);
 
-
+    Route::post('/post_rating', [App\Http\Controllers\Api\V2\BookController::class, 'postRating']);
+    Route::delete('/delete_rating/{id}', [App\Http\Controllers\Api\V2\BookController::class, 'delRating']);
 });

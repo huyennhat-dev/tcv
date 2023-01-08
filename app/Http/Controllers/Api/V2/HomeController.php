@@ -66,7 +66,7 @@ class HomeController extends Controller
         }
 
         $bookselects = Book::where('trangthai', 1)
-            ->orderBy('luotdecu', 'DESC')->get()->take(15);
+            ->orderBy('sosao', 'DESC')->get()->take(15);
         foreach ($bookselects as $val) {
             $selectbook = [
                 "id" => $val['id'],
@@ -196,9 +196,11 @@ class HomeController extends Controller
         }
 
         if (count($book) < 15) {
-            $bookrand = Book::all()->where('trangthai', 1)
+            $bookrand = Book::where('trangthai', 1)
                 ->where('theloai_id', '!=', $theloai_id)
-                ->random(15-count($book));
+                ->orderBy('luotxem','desc')
+                ->get()
+                ->take(15 - count($book));
 
             foreach ($bookrand as $val) {
                 $chuongmoinhat = Chapter::where('trangthai', 1)
@@ -226,5 +228,38 @@ class HomeController extends Controller
         }
 
         return response()->json($datas);
+    }
+
+    public function search_book()
+    {
+
+        $datas = [];
+        $tukhoa = trim($_GET['tukhoa']);
+        if ($tukhoa != null) {
+            $truyen = Book::where('trangthai', '1')
+                ->where(function ($query) {
+                    $tukhoa = trim($_GET['tukhoa']);
+                    $query->where('tentruyen', 'LIKE', '%' . $tukhoa . '%')
+                        ->orWhere('tacgia', 'LIKE', '%' . $tukhoa . '%');
+                })
+                ->get();
+            foreach ($truyen as $item) {
+                $theloai = Category::find($item['theloai_id']);
+                $data = [
+                    "id" => $item['id'],
+                    "tentruyen" => $item['tentruyen'],
+                    "hinhanh" => $item['hinhanh'],
+                    "tacgia" => $item['tacgia'],
+                    "sosao"=>$item['sosao'],
+                    "theloai" => $theloai['tentheloai'],
+                    'tongsochuong' => $item['sochuong']
+                ];
+                array_push($datas, $data);
+            }
+
+            return $datas;
+        } else {
+            return $datas;
+        }
     }
 }
